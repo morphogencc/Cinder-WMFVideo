@@ -111,6 +111,7 @@ class ciWMFVideoPlayer
 		void bind(uint8_t texture_unit);
 		void unbind();
 
+		ci::ImageSourceRef getImageSource();
 		bool isTexturedLocked()const { return mIsSharedTextureLocked; }
 
 		bool setSpeed( float speed, bool useThinning = false ); //thinning drops delta frames for faster playback though appears to be choppy, default is false

@@ -50,6 +50,24 @@ void ciWMFVideoPlayer::unbind()
 	mPlayer->mEVRPresenter->unlockSharedTexture();
 }
 
+ci::ImageSourceRef ciWMFVideoPlayer::getImageSource() {
+	mPlayer->mEVRPresenter->lockSharedTexture();
+
+	int w = mTex->getWidth();
+	int h = mTex->getHeight();
+	gl::Texture2d::Format format;
+	format.setInternalFormat(mTex->getInternalFormat());
+
+	ci::gl::TextureRef copyTex = gl::Texture::create(w, h, format);
+
+	glCopyImageSubData(mTex->getId(), mTex->getTarget(), 0, 0, 0, 0,
+		copyTex->getId(), copyTex->getTarget(), 0, 0, 0, 0,
+		w, h, 1);
+
+	mPlayer->mEVRPresenter->unlockSharedTexture();
+	return copyTex->createSource();
+}
+
 ciWMFVideoPlayer* findPlayers( HWND hwnd )
 {
 	for each( PlayerItem e in g_WMFVideoPlayers ) {
